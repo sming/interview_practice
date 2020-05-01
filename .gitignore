@@ -1,0 +1,7 @@
+/java/Netbeans/BinaryGap/nbproject/private/
+*.dll
+*.jar
+bin/
+obj/
+.vs/
+.vscode/
