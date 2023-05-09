@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,40 +42,66 @@ class Yacht {
     int score() {
         int score = 0;
         switch (yachtCategory) {
-            case ONES:
-            case TWOS:
-            case THREES:
-            case FOURS:
-            case FIVES:
-            case SIXES:
-                score = getRepeatedDigitScore(yachtCategory);
-                break;
-            case FULL_HOUSE:
-                score = getFullHouseScore();
-                break;
-            case FOUR_OF_A_KIND:
-                score = getFourOfAKind();
-                break;
-            case LITTLE_STRAIGHT:
-                score = getLittleStraight();
-                break;
-            case BIG_STRAIGHT:
-                score = getBigStraight();
-                break;
-            default:
-                break;
+        case ONES:
+        case TWOS:
+        case THREES:
+        case FOURS:
+        case FIVES:
+        case SIXES:
+            score = getRepeatedDigitScore(yachtCategory);
+            break;
+        case FULL_HOUSE:
+            score = getFullHouseScore();
+            break;
+        case FOUR_OF_A_KIND:
+            score = getFourOfAKind();
+            break;
+        case LITTLE_STRAIGHT:
+            score = getLittleStraight();
+            break;
+        case BIG_STRAIGHT:
+            score = getBigStraight();
+            break;
+        case CHOICE:
+            score = getChoice();
+            break;
+        case YACHT:
+            score = getYacht();
+            break;
+        default:
+            break;
         }
 
         return score;
+    }
+
+    private int getYacht() {
+        var differentNumbers = new HashSet<Integer>();
+        for (int diceValue : dice) {
+            differentNumbers.add(diceValue);
+        }
+
+        if (differentNumbers.size() > 1)
+            return 0;
+
+        return 50;
+    }
+
+    private int getChoice() {
+        int sum = 0;
+        for (int i : dice) {
+            sum += i;
+        }
+        return sum;
     }
 
     private int getFullHouseScore() {
         int score = 0;
         var numberCounts = new HashMap<Integer, Integer>();
         for (var yc : numberCategories) {
-            int digitCount = countDigitOccurrencesOnDice(yc.num);
-            numberCounts.put(digitCount, yc.num);
-            score += digitCount * yc.num;
+            int digitCount = countDigitOccurrencesOnDice(yc.ordinal());
+            numberCounts.put(digitCount, yc.ordinal());
+            score += digitCount * yc.ordinal();
         }
 
         if (!(numberCounts.containsKey(2) && numberCounts.containsKey(3)))
@@ -87,9 +114,11 @@ class Yacht {
         int score = 0;
         var numberCounts = new HashMap<Integer, Integer>();
         for (var yc : numberCategories) {
-            int digitCount = numberCounts.put(countDigitOccurrencesOnDice(yc.num), yc.num);
-            if (digitCount == 4)
-                score += 4 * yc.num;
+            numberCounts.put(yc.ordinal(), countDigitOccurrencesOnDice(yc.ordinal()));
+            if (numberCounts.get(yc.ordinal()) >= 4) {
+                score = 4 * yc.ordinal();
+                break;
+            }
         }
 
         return score;
@@ -119,7 +148,7 @@ class Yacht {
     }
 
     private int getRepeatedDigitScore(YachtCategory yc) {
-        return countDigitOccurrencesOnDice(yc.num) * yc.num;
+        return countDigitOccurrencesOnDice(yc.ordinal()) * yc.ordinal();
     }
 
     private int countDigitOccurrencesOnDice(final int digit) {

@@ -1,11 +1,16 @@
-public enum YachtCategory {
+enum YachtCategory {
 
-    YACHT(0), ONES(1), TWOS(2), THREES(3), FOURS(4), FIVES(5), SIXES(6), FULL_HOUSE(7), FOUR_OF_A_KIND(8),
-    LITTLE_STRAIGHT(9), BIG_STRAIGHT(10), CHOICE(11);
+    YACHT,
+    ONES,
+    TWOS,
+    THREES,
+    FOURS,
+    FIVES,
+    SIXES,
+    FULL_HOUSE,
+    FOUR_OF_A_KIND,
+    LITTLE_STRAIGHT,
+    BIG_STRAIGHT,
+    CHOICE
 
-    public final int num;
-
-    private YachtCategory(int num) {
-        this.num = num;
-    }
 }
